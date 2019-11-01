@@ -74,6 +74,7 @@ public class AccountController {
 		logger.info("====> AccountController.getAccountsByPage beg   ====>");
 		PageInfo<Account> listPage = accountService.selectBySelective(atVO,atVO.getPage());
 		
+		logger.info("====>");
 		return Result.buildSuccess(listPage);
 	}
 	
