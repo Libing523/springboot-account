@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.forezp.mapper.AccountMapper">
+	<resultMap id="BaseResultMap" type="com.forezp.entity.Account">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sex" property="sex" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, name, sex
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from account
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectAllAccount" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from account
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from
+		account
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.forezp.entity.Account">
+		insert into account (id, name,
+		sex
+		)
+		values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{sex,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.forezp.entity.Account">
+		insert into account
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.forezp.entity.Account">
+		update account
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.forezp.entity.Account">
+		update account
+		set
+		name = #{name,jdbcType=VARCHAR},
+		sex = #{sex,jdbcType=VARCHAR}
+		where
+		id =
+		#{id,jdbcType=VARCHAR}
+	</update>
+
+
+
+	<!-- 批量插入 -->
+	<insert id="insertBatchAccountList" parameterType="java.util.List">
+		insert into account ( id,name,sex
+		)
+		SELECT A.*
+		FROM(
+		<foreach collection="list" item="item" index="index"
+			separator="UNION ALL">
+			SELECT
+			#{item.id,jdbcType=VARCHAR} id,
+			#{item.name,jdbcType=VARCHAR} name,
+			#{item.sex,jdbcType=VARCHAR}
+			sex
+			FROM dual
+		</foreach>
+		)A
+	</insert>
+
+
+	<select id="findAccountByDetail" parameterType="java.util.List"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from account t
+		where t.id in (
+		<trim>
+			<foreach collection="list" item="item" index="index"
+				separator=",">
+				#{item.id}
+			</foreach>
+			)
+		</trim>
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="selectBySelective" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from account
+	</select>
+
+
+</mapper>
